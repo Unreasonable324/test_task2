@@ -3,10 +3,10 @@
     <div class="container">
       <UHeader></UHeader>
       <div class="header-comparsion">
-        <div class="header-comparsion__title" >Смартфоны</div>
+        <div class="header-comparsion__title">Смартфоны</div>
         <div class="header-comparsion__navigation">
           Отобразить товары:<span
-            v-for="(qty) in quantity"
+            v-for="qty in quantity"
             :key="qty"
             @click="getQuantity(qty)"
           >
@@ -19,9 +19,14 @@
         <table class="table" style="width: 100%">
           <tr>
             <td valign="bottom">
-              <input type="checkbox" name="" id="" />Показать различия
+              <input
+                type="checkbox"
+                id="checked"
+                v-model="checked"
+                @click="checkedd"
+              /><label for="checked">Показать различия</label>
             </td>
-            <td v-for="phone in PHONES" :key="phone.name">
+            <td v-for="phone in phones" :key="phone.name">
               <div class="table_titles__preview-data">
                 <div class="table_titles__preview__phone-img">
                   <img
@@ -36,47 +41,47 @@
           </tr>
           <tr>
             <td>производитель</td>
-            <td v-for="phone in PHONES" :key="phone.name">{{ phone.manufacturer }}</td>
+            <td v-for="phone in phones" :key="phone.name">{{ phone.manufacturer }}</td>
           </tr>
-          <tr>
+          <tr v-if="isRavno">
             <td>год релиза</td>
-            <td v-for="phone in PHONES" :key="phone.name">{{ phone.releaseYear }}</td>
+            <td v-for="phone in phones" :key="phone.name">{{ phone.releaseYear }}</td>
           </tr>
-          <tr>
+          <tr v-if="isRavno2">
             <td>Диагональ экрана (дюйм)</td>
-            <td v-for="phone in PHONES" :key="phone.name">{{ phone.diagonal }}</td>
+            <td v-for="phone in phones" :key="phone.name">{{ phone.diagonal }}</td>
           </tr>
           <tr>
             <td>Страна-производитель</td>
-            <td v-for="phone in PHONES" :key="phone.name">{{ phone.countryOfOrigin }}</td>
+            <td v-for="phone in phones" :key="phone.name">{{ phone.countryOfOrigin }}</td>
           </tr>
           <tr>
             <td>Объем памяти</td>
-            <td v-for="phone in PHONES" :key="phone.name">{{ phone.memoryCapacity }}</td>
+            <td v-for="phone in phones" :key="phone.name">{{ phone.memoryCapacity }}</td>
           </tr>
           <tr>
             <td>Частота обновления экрана</td>
-            <td v-for="phone in PHONES" :key="phone.name">
+            <td v-for="phone in phones" :key="phone.name">
               {{ phone.screenRefreshRate }}
             </td>
           </tr>
           <tr>
             <td>nfc</td>
-            <td v-for="phone in PHONES" :key="phone.name">
+            <td v-for="phone in phones" :key="phone.name">
               <img src="../assets/images/checked.png" alt="" v-if="phone.nfc" />
               <img src="../assets/images/noChecked.png" alt="" v-else />
             </td>
           </tr>
           <tr>
             <td>Поддержка eSIM</td>
-            <td v-for="phone in PHONES" :key="phone.name">
+            <td v-for="phone in phones" :key="phone.name">
               <img src="../assets/images/checked.png" alt="" v-if="phone.eSIMSupport" />
               <img src="../assets/images/noChecked.png" alt="" v-else />
             </td>
           </tr>
           <tr>
             <td>Поддержка беспроводной зарядки</td>
-            <td v-for="phone in PHONES" :key="phone.name">
+            <td v-for="phone in phones" :key="phone.name">
               <img
                 src="../assets/images/checked.png"
                 alt=""
@@ -87,7 +92,7 @@
           </tr>
           <tr>
             <td>стоимость</td>
-            <td v-for="phone in PHONES" :key="phone.name">{{ phone.price }} ₽</td>
+            <td v-for="phone in phones" :key="phone.name">{{ phone.price }} ₽</td>
           </tr>
         </table>
       </div>
@@ -97,7 +102,7 @@
 
 <script>
 import UHeader from "./U-header.vue";
-import { mapActions, mapGetters } from "vuex";
+// import { mapActions, mapGetters } from "vuex";
 export default {
   components: {
     UHeader,
@@ -106,30 +111,190 @@ export default {
   created() {},
   data() {
     return {
+      phones: [
+        {
+          image: "Apple_iPhone_12.png",
+          name: "Apple iPhone 12",
+          manufacturer: "Apple",
+          releaseYear: "2020",
+          diagonal: "6,1",
+          countryOfOrigin: "Китай",
+          memoryCapacity: "128 Гб",
+          screenRefreshRate: "60 Гц",
+          nfc: false,
+          eSIMSupport: false,
+          supportWirelessCharging: false,
+          price: 81990,
+        },
+        {
+          image: "Xiaomi_Mi_11_Lite.png",
+          name: "Apple iPhone 12",
+          manufacturer: "Xiaomi_Mi_11_Lite.png",
+          releaseYear: "2020",
+          diagonal: "6,1",
+          countryOfOrigin: "Китай",
+          memoryCapacity: "128 Гб",
+          screenRefreshRate: "60 Гц",
+          nfc: false,
+          eSIMSupport: false,
+          supportWirelessCharging: false,
+          price: 81990,
+        },
+        {
+          image: "Xiaomi_Mi_11_Lite.png",
+          name: "Xiaomi Mi 11 Lite ",
+          manufacturer: "Xiaomi",
+          releaseYear: "2021",
+          diagonal: "6,55",
+          countryOfOrigin: "Китай",
+          memoryCapacity: "128 Гб",
+          screenRefreshRate: "90 Гц",
+          nfc: true,
+          eSIMSupport: true,
+          supportWirelessCharging: false,
+          price: 27490,
+        },
+        {
+          image: "Samsung_Galaxy_A72.png",
+          name: "Samsung Galaxy A72",
+          manufacturer: "Samsung",
+          releaseYear: "2021",
+          diagonal: "6,7",
+          countryOfOrigin: "Вьетнам",
+          memoryCapacity: "128 Гб",
+          screenRefreshRate: "90 Гц",
+          nfc: true,
+          eSIMSupport: false,
+          supportWirelessCharging: true,
+          price: 32890,
+        },
+        {
+          image: "Apple_iPhone_Xr.png",
+          name: "iPhone XR",
+          manufacturer: "Apple",
+          releaseYear: "2018",
+          diagonal: "6,1",
+          countryOfOrigin: "Китай",
+          memoryCapacity: "256 Гб",
+          screenRefreshRate: "90 Гц",
+          nfc: true,
+          eSIMSupport: true,
+          supportWirelessCharging: true,
+          price: 65990,
+        },
+        {
+          image: "Samsung_Galaxy_S21.png",
+          name: "Samsung Galaxy S21",
+          manufacturer: "Samsung",
+          releaseYear: "2021",
+          diagonal: "6,2",
+          countryOfOrigin: "Вьетнам",
+          memoryCapacity: "256 Гб",
+          screenRefreshRate: "90 Гц",
+          nfc: true,
+          eSIMSupport: true,
+          supportWirelessCharging: true,
+          price: 65990,
+        },
+        {
+          image: "Realme_8_Pro.png",
+          name: "Realme 8 Pro",
+          manufacturer: "Realme",
+          releaseYear: "2021",
+          diagonal: "6,51",
+          countryOfOrigin: "Китай",
+          memoryCapacity: "256 Гб",
+          screenRefreshRate: "60 Гц",
+          nfc: true,
+          eSIMSupport: true,
+          supportWirelessCharging: true,
+          price: 27990,
+        },
+      ],
       quantity: [2, 3, 4, 5, 6],
       remainsPhones: [],
-      phoneVisible: [],
       visiblePhone: 3,
+      checked: false,
+      isRavno: true,
+      isRavno2: true,
     };
   },
   props: {},
-  computed: { ...mapGetters(["PHONES"]) },
   methods: {
-    ...mapActions(["GET_PHONES_FROM_API"]),
     getQuantity(qty) {
       const spans = document.querySelectorAll(".header-comparsion__navigation span");
       spans.forEach(function (span) {
         span.style.textDecoration = "none";
       });
-      spans[qty-2].style.textDecoration = "underline";
+      spans[qty - 2].style.textDecoration = "underline";
+      this.visiblePhone = qty;
+      // console.log(this.visiblePhone);
+      this.getPhonesVisible();
+    },
+    getPhonesVisible() {
       let remainsPhonesLength = this.remainsPhones.length;
-      while (remainsPhonesLength--) this.PHONES.push(this.remainsPhones.pop());
-      this.visiblePhone = this.PHONES.length - qty;
-      while (this.visiblePhone--) this.remainsPhones.push(this.PHONES.pop(qty));
+      while (remainsPhonesLength--) this.phones.push(this.remainsPhones.pop());
+      this.visiblePhone = this.phones.length - this.visiblePhone;
+      while (this.visiblePhone--) this.remainsPhones.push(this.phones.pop());
+    },
+    checkedd() {
+      this.isRavno = true;
+      this.isRavno2 = true;
+      // let phonex
+      if (this.checked === !true) {
+        let xxx = [];
+        for (let i = 0; i < this.phones.length; i++) {
+          xxx.push(this.phones[i].releaseYear);
+          const allEqual = (xxx) => xxx.every((v) => v === xxx[0]);
+          console.log(allEqual(xxx));
+          this.isRavno = !allEqual(xxx);
+        }
+      }
+      if (this.checked === !true) {
+        let xxx = [];
+        for (let i = 0; i < this.phones.length; i++) {
+          xxx.push(this.phones[i].diagonal);
+          const allEqual = (xxx) => xxx.every((v) => v === xxx[0]);
+          console.log(allEqual(xxx));
+          this.isRavno2 = !allEqual(xxx);
+        }
+      }
+
+      // console.log(xxx);
+      // var meaning;
+      // this.phones.forEach((phone) => {
+      //   phonex = phone
+      // for (let z = 0; z < Object.keys(phone).length; z++) {
+      //   console.log(Object.keys(phone)[z]);
+      // }
+      // key = Object.keys(phone);
+      // console.log(Object.keys(phone));
+      // Object.keys(phone).forEach((keyPhone) => {
+      //   key = keyPhone;
+      // });
+      // });
+      // console.log(key);
+
+      // for (let i = 0; i < this.phones.length; i++) {
+      //   for(let z = 0; z<key.length; z++){
+      //     meaning.push(this.phones[i].key[z]);
+      //   }
+
+      // }
+      // console.log(key);
+      // console.log(meaning);
+      // let phoneKeys = Object.keys(phonex)
+      // console.log(phoneKeys);
+      // for (let z = 0; z<phoneKeys.length; z++){
+      //   const friendsNames = Array.from(this.phones, ({phoneKeys}) => phoneKeys);
+      //   console.log(friendsNames);
+      // }
+      // const friendsNames = Array.from(this.phones, ({name}) => name);
+      //   console.log(friendsNames);
     },
   },
   mounted() {
-    this.GET_PHONES_FROM_API();
+    this.getPhonesVisible();
   },
 };
 </script>
@@ -161,6 +326,9 @@ export default {
 }
 .header-comparsion__navigation span {
   cursor: pointer;
+}
+.header-comparsion__navigation span:nth-of-type(2) {
+  text-decoration: underline;
 }
 .header-comparsion__navigation span:hover {
   text-decoration: underline;
