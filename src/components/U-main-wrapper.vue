@@ -3,8 +3,16 @@
     <div class="container">
       <UHeader></UHeader>
       <div class="header-comparsion">
-        <div class="header-comparsion__title">Смартфоны</div>
-        <div class="header-comparsion__navigation">Отобразить товары: 2 3 4 5 6</div>
+        <div class="header-comparsion__title" >Смартфоны</div>
+        <div class="header-comparsion__navigation">
+          Отобразить товары:<span
+            v-for="(qty) in quantity"
+            :key="qty"
+            @click="getQuantity(qty)"
+          >
+            {{ qty }}
+          </span>
+        </div>
       </div>
 
       <div class="table-wrapper">
@@ -97,12 +105,28 @@ export default {
   name: "U-main-wrapper",
   created() {},
   data() {
-    return {};
+    return {
+      quantity: [2, 3, 4, 5, 6],
+      remainsPhones: [],
+      phoneVisible: [],
+      visiblePhone: 3,
+    };
   },
   props: {},
   computed: { ...mapGetters(["PHONES"]) },
   methods: {
     ...mapActions(["GET_PHONES_FROM_API"]),
+    getQuantity(qty) {
+      const spans = document.querySelectorAll(".header-comparsion__navigation span");
+      spans.forEach(function (span) {
+        span.style.textDecoration = "none";
+      });
+      spans[qty-2].style.textDecoration = "underline";
+      let remainsPhonesLength = this.remainsPhones.length;
+      while (remainsPhonesLength--) this.PHONES.push(this.remainsPhones.pop());
+      this.visiblePhone = this.PHONES.length - qty;
+      while (this.visiblePhone--) this.remainsPhones.push(this.PHONES.pop(qty));
+    },
   },
   mounted() {
     this.GET_PHONES_FROM_API();
@@ -132,7 +156,16 @@ export default {
   line-height: 60px;
   letter-spacing: 0.02em;
   color: #0d5adc;
+  display: flex;
+  gap: 5px;
 }
+.header-comparsion__navigation span {
+  cursor: pointer;
+}
+.header-comparsion__navigation span:hover {
+  text-decoration: underline;
+}
+
 .table-wrapper {
   /* display: flex; */
   padding-bottom: 90px;
@@ -178,7 +211,7 @@ export default {
 }
 .table_titles__preview-data {
   /* display: inline-block; */
-  
+
   position: relative;
 }
 .table_titles__preview__phone-img {
