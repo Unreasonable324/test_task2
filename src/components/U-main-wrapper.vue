@@ -34,7 +34,31 @@
                     alt="phoneImg"
                   />
                 </div>
-                <img src="../assets/images/chevron_small.png" alt="" class="select-png" />
+                <img
+                  src="../assets/images/chevron_small.png"
+                  @click="xxx = !xxx"
+                  alt=""
+                  class="select-png"
+                /><UModalWindow v-if="xxx">
+                  <div
+                    class="wrapper-remains-phones"
+                    v-for="remainPhone in remainsPhones"
+                    :key="remainPhone.name"
+                  >
+                    <div class="wrapper-remains-phones__item">
+                      <img src="../assets/images/Vector.png" alt="" />
+                      <div class="wrapper-remains-phones__item-image">
+                        <img
+                          :src="
+                            require('../assets/images/phonesImg/' + remainPhone.image)
+                          "
+                          alt="phoneImg"
+                        />
+                      </div>
+                      {{ remainPhone.name }}
+                    </div>
+                  </div>
+                </UModalWindow>
                 <div class="table_titles__preview__phone-name">{{ phone.name }}</div>
               </div>
             </td>
@@ -43,21 +67,25 @@
             <td>производитель</td>
             <td v-for="phone in phones" :key="phone.name">{{ phone.manufacturer }}</td>
           </tr>
-          <tr >
+          <tr>
             <td>год релиза</td>
             <td v-for="phone in phones" :key="phone.name">{{ phone.releaseYear }}</td>
           </tr>
-          <tr >
+          <tr>
             <td>Диагональ экрана (дюйм)</td>
             <td v-for="phone in phones" :key="phone.name">{{ phone.diagonal }}</td>
           </tr>
-          <tr>
+          <tr v-if="Tr">
             <td>Страна-производитель</td>
-            <td v-for="phone in phones" :key="phone.name">{{ phone.countryOfOrigin }}</td>
+            <td v-for="phone in phones" :key="phone.name">
+              {{ showTr(phone.countryOfOrigin) }}
+            </td>
           </tr>
-          <tr >
+          <tr v-if="Tr">
             <td>Объем памяти</td>
-            <td v-for="phone in phones" :key="phone.name">{{ phone.memoryCapacity }}</td>
+            <td v-for="phone in phones" :key="phone.name">
+              {{ showTr(phone.memoryCapacity) }}
+            </td>
           </tr>
           <tr>
             <td>Частота обновления экрана</td>
@@ -101,10 +129,12 @@
 </template>
 
 <script>
+import UModalWindow from "./U-modal-window";
 import UHeader from "./U-header.vue";
 // import { mapActions, mapGetters } from "vuex";
 export default {
   components: {
+    UModalWindow,
     UHeader,
   },
   name: "U-main-wrapper",
@@ -203,7 +233,17 @@ export default {
       remainsPhones: [],
       visiblePhone: 3,
       isChecked: false,
-     
+      xxx: false,
+      Tr: true,
+      showTr: function (data) {
+        if (data) {
+          this.Tr = true;
+          return data;
+        } else {
+          this.Tr = false;
+          return "";
+        }
+      },
     };
   },
   props: {},
@@ -215,11 +255,11 @@ export default {
       });
       spans[qty - 2].style.textDecoration = "underline";
       this.visiblePhone = qty;
-      if(this.isChecked != false){
+      if (this.isChecked != false) {
         this.checked();
-      this.isChecked = false;
+        this.isChecked = false;
       }
-      
+
       this.getPhonesVisible();
     },
     getPhonesVisible() {
@@ -229,6 +269,7 @@ export default {
       while (this.visiblePhone--) this.remainsPhones.push(this.phones.pop());
     },
     checked() {
+      this.Tr = true;
       if (this.clonePhones.length != this.phones.length) {
         this.clonePhones = structuredClone(this.phones);
         console.log("спопировал");
@@ -348,5 +389,21 @@ export default {
 .table_titles__preview__phone-name {
   display: flex;
   justify-content: center;
+}
+.wrapper-remains-phones {
+  box-sizing: border-box;
+  height: 50px;
+}
+.wrapper-remains-phones__item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 100%;
+}
+.wrapper-remains-phones__item-image {
+  height: 100%;
+}
+.wrapper-remains-phones__item-image img {
+  height: 100%;
 }
 </style>

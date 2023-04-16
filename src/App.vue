@@ -1,14 +1,17 @@
 <template>
-  <UMainWrapper></UMainWrapper>
+  <!-- <UMainWrapper></UMainWrapper> -->
+  <UMainWrapper2></UMainWrapper2>
 </template>
 
 <script lang="ts">
-import UMainWrapper from "./components/U-main-wrapper.vue";
+// import UMainWrapper from "./components/U-main-wrapper.vue";
+import UMainWrapper2 from "./components/U-main-wrapper2.vue";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
   components: {
-    UMainWrapper,
+    // UMainWrapper,
+    UMainWrapper2,
   },
 })
 export default class App extends Vue {}
