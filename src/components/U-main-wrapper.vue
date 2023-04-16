@@ -22,8 +22,8 @@
               <input
                 type="checkbox"
                 id="checked"
-                v-model="checked"
-                @click="checkedd"
+                v-model="isChecked"
+                @click="checked"
               /><label for="checked">Показать различия</label>
             </td>
             <td v-for="phone in phones" :key="phone.name">
@@ -43,11 +43,11 @@
             <td>производитель</td>
             <td v-for="phone in phones" :key="phone.name">{{ phone.manufacturer }}</td>
           </tr>
-          <tr v-if="isRavno">
+          <tr >
             <td>год релиза</td>
             <td v-for="phone in phones" :key="phone.name">{{ phone.releaseYear }}</td>
           </tr>
-          <tr v-if="isRavno2">
+          <tr >
             <td>Диагональ экрана (дюйм)</td>
             <td v-for="phone in phones" :key="phone.name">{{ phone.diagonal }}</td>
           </tr>
@@ -55,7 +55,7 @@
             <td>Страна-производитель</td>
             <td v-for="phone in phones" :key="phone.name">{{ phone.countryOfOrigin }}</td>
           </tr>
-          <tr>
+          <tr >
             <td>Объем памяти</td>
             <td v-for="phone in phones" :key="phone.name">{{ phone.memoryCapacity }}</td>
           </tr>
@@ -126,20 +126,7 @@ export default {
           supportWirelessCharging: false,
           price: 81990,
         },
-        {
-          image: "Xiaomi_Mi_11_Lite.png",
-          name: "Apple iPhone 12",
-          manufacturer: "Xiaomi_Mi_11_Lite.png",
-          releaseYear: "2020",
-          diagonal: "6,1",
-          countryOfOrigin: "Китай",
-          memoryCapacity: "128 Гб",
-          screenRefreshRate: "60 Гц",
-          nfc: false,
-          eSIMSupport: false,
-          supportWirelessCharging: false,
-          price: 81990,
-        },
+
         {
           image: "Xiaomi_Mi_11_Lite.png",
           name: "Xiaomi Mi 11 Lite ",
@@ -211,12 +198,12 @@ export default {
           price: 27990,
         },
       ],
+      clonePhones: [],
       quantity: [2, 3, 4, 5, 6],
       remainsPhones: [],
       visiblePhone: 3,
-      checked: false,
-      isRavno: true,
-      isRavno2: true,
+      isChecked: false,
+     
     };
   },
   props: {},
@@ -228,7 +215,11 @@ export default {
       });
       spans[qty - 2].style.textDecoration = "underline";
       this.visiblePhone = qty;
-      // console.log(this.visiblePhone);
+      if(this.isChecked != false){
+        this.checked();
+      this.isChecked = false;
+      }
+      
       this.getPhonesVisible();
     },
     getPhonesVisible() {
@@ -237,60 +228,23 @@ export default {
       this.visiblePhone = this.phones.length - this.visiblePhone;
       while (this.visiblePhone--) this.remainsPhones.push(this.phones.pop());
     },
-    checkedd() {
-      this.isRavno = true;
-      this.isRavno2 = true;
-      // let phonex
-      if (this.checked === !true) {
-        let xxx = [];
-        for (let i = 0; i < this.phones.length; i++) {
-          xxx.push(this.phones[i].releaseYear);
-          const allEqual = (xxx) => xxx.every((v) => v === xxx[0]);
-          console.log(allEqual(xxx));
-          this.isRavno = !allEqual(xxx);
-        }
-      }
-      if (this.checked === !true) {
-        let xxx = [];
-        for (let i = 0; i < this.phones.length; i++) {
-          xxx.push(this.phones[i].diagonal);
-          const allEqual = (xxx) => xxx.every((v) => v === xxx[0]);
-          console.log(allEqual(xxx));
-          this.isRavno2 = !allEqual(xxx);
-        }
+    checked() {
+      if (this.clonePhones.length != this.phones.length) {
+        this.clonePhones = structuredClone(this.phones);
+        console.log("спопировал");
+      } else {
+        this.phones = structuredClone(this.clonePhones);
       }
 
-      // console.log(xxx);
-      // var meaning;
-      // this.phones.forEach((phone) => {
-      //   phonex = phone
-      // for (let z = 0; z < Object.keys(phone).length; z++) {
-      //   console.log(Object.keys(phone)[z]);
-      // }
-      // key = Object.keys(phone);
-      // console.log(Object.keys(phone));
-      // Object.keys(phone).forEach((keyPhone) => {
-      //   key = keyPhone;
-      // });
-      // });
-      // console.log(key);
-
-      // for (let i = 0; i < this.phones.length; i++) {
-      //   for(let z = 0; z<key.length; z++){
-      //     meaning.push(this.phones[i].key[z]);
-      //   }
-
-      // }
-      // console.log(key);
-      // console.log(meaning);
-      // let phoneKeys = Object.keys(phonex)
-      // console.log(phoneKeys);
-      // for (let z = 0; z<phoneKeys.length; z++){
-      //   const friendsNames = Array.from(this.phones, ({phoneKeys}) => phoneKeys);
-      //   console.log(friendsNames);
-      // }
-      // const friendsNames = Array.from(this.phones, ({name}) => name);
-      //   console.log(friendsNames);
+      if (this.isChecked === !true) {
+        Object.entries(this.phones[0]).forEach(([key, value]) => {
+          const isSameValuse = this.phones.every((phone) => phone[key] === value);
+          console.log(isSameValuse);
+          if (isSameValuse) {
+            this.phones.forEach((phone) => delete phone[key]);
+          }
+        });
+      }
     },
   },
   mounted() {
