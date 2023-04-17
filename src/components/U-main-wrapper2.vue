@@ -14,7 +14,15 @@
           </span>
         </div>
       </div>
-      <UTable :phones_data="phones" @checked="checked" :isChecked="isChecked"></UTable>
+      <UTable
+        :phones_data="phones"
+        :remainsPhones_data="remainsPhones"
+        @replacementPhone="replacementPhone"
+        ><input type="checkbox" id="checked" @click="checked" v-model="isChecked" /><label
+          for="checked"
+          >Показать различия</label
+        ></UTable
+      >
     </div>
   </div>
 </template>
@@ -37,11 +45,12 @@ export default {
       visiblePhone: 3,
       clonePhones: [],
       isChecked: false,
-
+      index: "",
       // isChecked: false,
 
       phones: [
         {
+          article: 1,
           image: "Apple_iPhone_12.png",
           name: "Apple iPhone 12",
           manufacturer: "Apple",
@@ -57,6 +66,7 @@ export default {
         },
 
         {
+          article: 2,
           image: "Xiaomi_Mi_11_Lite.png",
           name: "Xiaomi Mi 11 Lite ",
           manufacturer: "Xiaomi",
@@ -71,6 +81,7 @@ export default {
           price: 27490,
         },
         {
+          article: 3,
           image: "Samsung_Galaxy_A72.png",
           name: "Samsung Galaxy A72",
           manufacturer: "Samsung",
@@ -85,6 +96,7 @@ export default {
           price: 32890,
         },
         {
+          article: 4,
           image: "Apple_iPhone_Xr.png",
           name: "iPhone XR",
           manufacturer: "Apple",
@@ -99,6 +111,7 @@ export default {
           price: 65990,
         },
         {
+          article: 5,
           image: "Samsung_Galaxy_S21.png",
           name: "Samsung Galaxy S21",
           manufacturer: "Samsung",
@@ -113,6 +126,7 @@ export default {
           price: 65990,
         },
         {
+          article: 6,
           image: "Realme_8_Pro.png",
           name: "Realme 8 Pro",
           manufacturer: "Realme",
@@ -153,8 +167,7 @@ export default {
     },
     checked() {
       // this.Tr = true;
-
-      this.isChecked = !this.isChecked;
+      // this.isChecked = !this.isChecked;
       if (this.clonePhones.length != this.phones.length) {
         this.clonePhones = structuredClone(this.phones);
         // console.log("спопировал");
@@ -162,15 +175,42 @@ export default {
         this.phones = structuredClone(this.clonePhones);
       }
 
-      if (this.isChecked === true) {
+      if (this.isChecked === false) {
         Object.entries(this.phones[0]).forEach(([key, value]) => {
           const isSameValuse = this.phones.every((phone) => phone[key] === value);
           // console.log(isSameValuse);
           if (isSameValuse) {
-            this.phones.forEach((phone) => delete phone[key]);
+            this.phones.forEach((phone) => (phone[key] = "duplicate"));
           }
         });
       }
+    },
+    replacementPhone(item, article) {
+      if (this.isChecked != false) {
+        this.checked();
+        this.isChecked = false;
+      }
+      let itemArticle = item.article;
+      for (var i = this.phones.length - 1; i >= 0; --i) {
+        if (this.phones[i].article == article) {
+          //кладу в остаток
+          this.index = this.phones.indexOf(this.phones[i]);
+          // console.log(index);
+          this.remainsPhones.push(this.phones[i]);
+          // срезаю то что положил в остаток
+          this.phones.splice(i, 1);
+        }
+      }
+      for (var z = this.remainsPhones.length - 1; z >= 0; --z) {
+        if (this.remainsPhones[z].article == itemArticle) {
+          //кладу в основу
+          this.phones.splice(this.index, 0, this.remainsPhones[z]);
+          // срезаю из остатка в остаток
+          this.remainsPhones.splice(z, 1);
+        }
+      }
+      this.clonePhones = structuredClone(this.phones);
+
     },
   },
   mounted() {
@@ -181,17 +221,18 @@ export default {
 
 <style>
 .U-main-wrapper {
+  overflow: hidden;
   position: relative;
 }
 .U-main-wrapper::before {
-  content: "";
+  /* content: "";
   width: 100%;
   height: 64.8%;
   background: #f4f9fc;
   position: absolute;
   z-index: -1;
   left: 0;
-  bottom: 0;
+  bottom: 0; */
 }
 .header-comparsion {
   margin-top: 60px;
