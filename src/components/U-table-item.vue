@@ -109,7 +109,7 @@ export default {
    
       this.isShowSearchPhoneModal = !this.isShowSearchPhoneModal;
       
-      if (this.isShowSearchPhoneModal === true) {
+      if (this.isShowSearchPhoneModal) {
         this.styleSelect = "transform: rotate(180deg);";
       } else {
         this.styleSelect = "";

@@ -59,10 +59,8 @@ export default {
   computed: {
     filteredMovies() {
       if (this.inputStr) {
-        let inputLowerCase = this.inputStr.toLowerCase();
         return this.remainsPhones_data.filter((item) => {
-          let itemNameLowerCase = item.name.toLowerCase();
-          return itemNameLowerCase.includes(inputLowerCase);
+          return item.name.toLowerCase().includes(this.inputStr.toLowerCase());
         });
       }
 
