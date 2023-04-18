@@ -46,7 +46,6 @@ export default {
       clonePhones: [],
       isChecked: false,
       index: "",
-      // isChecked: false,
 
       phones: [
         {
@@ -166,11 +165,8 @@ export default {
       while (this.visiblePhone--) this.remainsPhones.push(this.phones.pop());
     },
     checked() {
-      // this.Tr = true;
-      // this.isChecked = !this.isChecked;
       if (this.clonePhones.length != this.phones.length) {
         this.clonePhones = structuredClone(this.phones);
-        // console.log("спопировал");
       } else {
         this.phones = structuredClone(this.clonePhones);
       }
@@ -178,7 +174,6 @@ export default {
       if (this.isChecked === false) {
         Object.entries(this.phones[0]).forEach(([key, value]) => {
           const isSameValuse = this.phones.every((phone) => phone[key] === value);
-          // console.log(isSameValuse);
           if (isSameValuse) {
             this.phones.forEach((phone) => (phone[key] = "duplicate"));
           }
@@ -193,19 +188,14 @@ export default {
       let itemArticle = item.article;
       for (var i = this.phones.length - 1; i >= 0; --i) {
         if (this.phones[i].article == article) {
-          //кладу в остаток
           this.index = this.phones.indexOf(this.phones[i]);
-          // console.log(index);
           this.remainsPhones.push(this.phones[i]);
-          // срезаю то что положил в остаток
           this.phones.splice(i, 1);
         }
       }
       for (var z = this.remainsPhones.length - 1; z >= 0; --z) {
         if (this.remainsPhones[z].article == itemArticle) {
-          //кладу в основу
           this.phones.splice(this.index, 0, this.remainsPhones[z]);
-          // срезаю из остатка в остаток
           this.remainsPhones.splice(z, 1);
         }
       }
@@ -224,16 +214,7 @@ export default {
   overflow: hidden;
   position: relative;
 }
-.U-main-wrapper::before {
-  /* content: "";
-  width: 100%;
-  height: 64.8%;
-  background: #f4f9fc;
-  position: absolute;
-  z-index: -1;
-  left: 0;
-  bottom: 0; */
-}
+
 .header-comparsion {
   margin-top: 60px;
   display: flex;

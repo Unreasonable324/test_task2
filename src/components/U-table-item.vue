@@ -12,38 +12,14 @@
             alt=""
             class="select-png"
             v-if="remainsPhones_data.length"
+            :style="styleSelect"
             @click="showSearchPhone(phone_data.article)"
           />
-          <UModalWindow v-if="showSearchPhoneModal">
-            <div class="wrapper-slot" >
-              <input
-                type="text"
-                placeholder="Поиск"
-                v-model="inputStr"
-                v-if="remainsPhones_data.length > 3"
-              />
-
-              <div
-                class="wrapper-remains-phones"
-                v-for="(item, index) of filteredMovies"
-                :key="index"
-              >
-                <div class="wrapper-remains-phones__item">
-                  <img
-                    src="../assets/images/Vector.png"
-                    alt=""
-                    @click="replacementPhone(item)"
-                  />
-                  <div class="wrapper-remains-phones__item-image">
-                    <img
-                      :src="require('../assets/images/phonesImg/' + item.image)"
-                      alt="phoneImg"
-                    />
-                  </div>
-                  {{ item.name }}
-                </div>
-              </div>
-            </div>
+          <UModalWindow
+            v-if="isShowSearchPhoneModal"
+            :remainsPhones_data="remainsPhones_data"
+            @replacementPhone="replacementPhone"
+          >
           </UModalWindow>
         </div>
         <div class="table_titles__preview__phone-name">{{ phone_data.name }}</div>
@@ -112,9 +88,8 @@ export default {
   created() {},
   data() {
     return {
-      showSearchPhoneModal: false,
-      inputStr: "",
-      article: "",
+      isShowSearchPhoneModal: false,
+      styleSelect: "",
     };
   },
   props: {
@@ -125,65 +100,37 @@ export default {
       },
     },
     remainsPhones_data: {
-      type: Object,
-      default() {
-        return {};
-      },
+      type: Array,
     },
   },
   methods: {
     showSearchPhone(key) {
       this.article = key;
-      // console.log(this.article);
-      this.showSearchPhoneModal = !this.showSearchPhoneModal;
+   
+      this.isShowSearchPhoneModal = !this.isShowSearchPhoneModal;
+      
+      if (this.isShowSearchPhoneModal === true) {
+        this.styleSelect = "transform: rotate(180deg);";
+      } else {
+        this.styleSelect = "";
+      }
     },
     replacementPhone(item) {
       this.$emit("replacementPhone", item, this.article);
     },
-   
   },
-
-  computed: {
-    filteredMovies() {
-      if (this.inputStr) {
-        let inputLowerCase = this.inputStr.toLowerCase();
-        // console.log(inputLowerCase);
-        return this.remainsPhones_data.filter((item) => {
-          let itemNameLowerCase = item.name.toLowerCase();
-          console.log(itemNameLowerCase);
-          return itemNameLowerCase.includes(inputLowerCase);
-        });
-      }
-      return this.remainsPhones_data;
-    },
-  },
-  // mounted(){
-  //   let vm = this
-  //   document.addEventListener('click',function(item){
-  //     if (item.target != vm.$refs['modal_wrapper']){
-  //       console.log(123);
-  //       vm.showSearchPhoneModal = false
-  //     }
-  //   })
-  // }
+  
 };
 </script>
 
 <style>
-.wrapper-remains-phones {
-  box-sizing: border-box;
-  height: 50px;
-}
-.wrapper-remains-phones__item {
+
+.table_titles__preview__phone-img {
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
-  gap: 20px;
-  height: 100%;
 }
-.wrapper-remains-phones__item-image {
-  height: 100%;
-}
-.wrapper-remains-phones__item-image img {
-  height: 100%;
+.select-png {
+  transition: all 0.3s ease;
 }
 </style>
